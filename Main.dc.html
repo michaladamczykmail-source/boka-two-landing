@@ -279,6 +279,7 @@
     .field input::placeholder, .field textarea::placeholder{color:#a8a49a;}
     .consent{display:flex; gap:10px; align-items:flex-start; margin-top:20px; font-size:12.5px; color:var(--ink-soft);}
     .consent input{margin-top:3px;}
+    .hp-field{position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden;}
     .contact-form .btn{margin-top:24px; width:100%; border-radius:4px;}
     .form-msg, .form-helper{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
     .contact-info{background:var(--paper-warm); padding:56px 48px; display:flex; flex-direction:column; justify-content:center; gap:26px;}
@@ -709,9 +710,13 @@
           <input type="checkbox" checked="{{form.consent}}" onChange="{{form.setConsent}}">
           Zgadzam się na kontakt zwrotny w sprawie mojego zapytania od BOKA Garden Room.
         </label>
+        <div class="hp-field" aria-hidden="true">
+          <label for="f-website">Strona WWW (zostaw puste)</label>
+          <input id="f-website" type="text" name="website" tabindex="-1" autocomplete="off" value="{{form.website}}" onChange="{{form.setWebsite}}">
+        </div>
         <button class="btn btn-primary" onClick="{{form.submit}}">Wyślij zapytanie</button>
         <sc-if value="{{form.showMsg}}" hint-placeholder-val="{{false}}">
-          <div class="form-msg">{{form.msgText}}</div>
+          <div class="form-msg" style="color:{{form.msgColor}}">{{form.msgText}}</div>
         </sc-if>
         <p class="form-helper">Odpowiadamy zwykle tego samego dnia roboczego.</p>
       </div>
@@ -761,6 +766,9 @@
 
 </x-dc>
 <script data-dc-script data-props='{"accent":{"editor":"color","default":"#c0341a","options":["#c0341a","#22252a","#3a3d42"]}}'>
+const PAGE_LOADED_AT = Date.now();
+const CONTACT_ENDPOINT = './contact.php';
+
 class Component extends DCLogic {
   toggleFaq(i){
     const open = { ...(this.state.faqOpen || {}) };
@@ -777,6 +785,63 @@ class Component extends DCLogic {
     ];
     const body = encodeURIComponent(bodyLines.join('\n'));
     return 'mailto:info@bokagardenroom.pl?subject=' + encodeURIComponent(subject) + '&body=' + body;
+  }
+
+  async submitContactForm(){
+    const s = this.state || {};
+    if (s.fSending) return;
+    const name = (s.fName || '').trim();
+    const contact = (s.fContact || '').trim();
+    const consent = s.fConsent !== undefined ? s.fConsent : true;
+
+    if (!name || !contact) {
+      this.setState({ fShowMsg: true, fMsgKind: 'error', fMsgText: 'Podaj imię oraz telefon lub e-mail, żebyśmy mogli się odezwać.' });
+      return;
+    }
+    if (!consent) {
+      this.setState({ fShowMsg: true, fMsgKind: 'error', fMsgText: 'Zaznacz zgodę na kontakt zwrotny, żeby wysłać zapytanie.' });
+      return;
+    }
+
+    this.setState({ fSending: true, fShowMsg: false });
+
+    const payload = {
+      name,
+      contact,
+      model: s.fModel || 'BOKA TWO',
+      message: (s.fMessage || '').trim(),
+      consent,
+      website: s.fWebsite || '',
+      elapsed: Date.now() - PAGE_LOADED_AT
+    };
+
+    try {
+      const res = await fetch(CONTACT_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      const result = await res.json().catch(() => ({}));
+
+      if (res.ok && result && result.ok) {
+        this.setState({
+          fSending: false,
+          fShowMsg: true,
+          fMsgKind: 'success',
+          fMsgText: 'Dziękujemy! Wiadomość dotarła do nas — odpowiadamy zwykle tego samego dnia roboczego.',
+          fName: '', fContact: '', fMessage: '', fWebsite: ''
+        });
+      } else {
+        throw new Error((result && result.error) || 'send_failed');
+      }
+    } catch (err) {
+      this.setState({
+        fSending: false,
+        fShowMsg: true,
+        fMsgKind: 'error',
+        fMsgText: 'Nie udało się wysłać formularza. Zadzwoń: +48 668 476 538 lub napisz na info@bokagardenroom.pl.'
+      });
+    }
   }
 
   renderVals(){
@@ -804,19 +869,17 @@ class Component extends DCLogic {
       model: state.fModel || 'BOKA TWO',
       message: state.fMessage || '',
       consent: state.fConsent !== undefined ? state.fConsent : true,
+      website: state.fWebsite || '',
       showMsg: !!state.fShowMsg,
-      msgText: 'Otworzyliśmy Twój program pocztowy z gotową wiadomością — wystarczy ją wysłać. Możesz też zadzwonić: +48 668 476 538.',
+      msgColor: state.fMsgKind === 'error' ? '#b3261e' : 'var(--ink-soft)',
+      msgText: state.fMsgText || '',
       setName: (e) => this.setState({ fName: e.target.value }),
       setContact: (e) => this.setState({ fContact: e.target.value }),
       setModel: (e) => this.setState({ fModel: e.target.value }),
       setMessage: (e) => this.setState({ fMessage: e.target.value }),
       setConsent: (e) => this.setState({ fConsent: e.target.checked }),
-      submit: () => {
-        const s = this.state || {};
-        const url = this.buildMailto('Zapytanie ze strony BOKA TWO', s.fName, s.fContact, s.fModel || 'BOKA TWO', s.fMessage);
-        window.location.href = url;
-        this.setState({ fShowMsg: true });
-      }
+      setWebsite: (e) => this.setState({ fWebsite: e.target.value }),
+      submit: () => { this.submitContactForm(); }
     };
 
     const uspCards = [

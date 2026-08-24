@@ -1,0 +1,9 @@
+# Blokada dostępu do plików konfiguracyjnych i katalogu rate-limitingu formularza.
+<FilesMatch "^contact-config(\.sample)?\.php$">
+    Require all denied
+</FilesMatch>
+
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^\.contact-rate/ - [F,L]
+</IfModule>
