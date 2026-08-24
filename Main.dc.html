@@ -1,0 +1,863 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --ink:#1c1c1a;
+      --ink-dark:#1c1c1a;
+      --ink-soft:#5a5852;
+      --paper:#ffffff;
+      --paper-warm:#ffffff;
+      --charcoal:#22252a;
+      --charcoal-soft:#3a3d42;
+      --wood:#3a3d42;
+      --wood-light:#cfccc3;
+      --terracotta-bg:#fbeee0;
+      --terracotta-icon:#c97c3e;
+      --line:#e7e1d6;
+      --radius:2px;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      font-family:'Raleway', -apple-system, "Segoe UI", sans-serif;
+      color:var(--ink);
+      background:var(--paper);
+      -webkit-font-smoothing:antialiased;
+      text-wrap:pretty;
+    }
+    a{color:inherit; text-decoration:none;}
+    a:hover{color:var(--wood);}
+    img{max-width:100%; display:block;}
+    h1,h2,h3{margin:0; font-weight:800; letter-spacing:-0.01em;}
+    p{margin:0; line-height:1.65;}
+    button{font-family:inherit; cursor:pointer;}
+    .wrap{max-width:1180px; margin:0 auto; padding:0 32px;}
+    .eyebrow{
+      text-transform:uppercase; letter-spacing:0.14em; font-size:12.5px; font-weight:700;
+      color:var(--wood); margin-bottom:14px; display:flex; align-items:center; gap:10px;
+    }
+    .eyebrow::before{content:""; width:26px; height:1.5px; background:var(--wood); display:inline-block;}
+    .btn{
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:16px 30px; font-size:15px; font-weight:700; letter-spacing:0.02em;
+      border-radius:var(--radius); border:1.5px solid transparent; white-space:nowrap;
+      transition:transform .15s ease, background .15s ease, color .15s ease, border-color .15s ease;
+    }
+    .btn:hover{transform:translateY(-1px);}
+    .btn-primary{background:var(--ink-dark); color:#fff;}
+    .btn-primary:hover{background:#000; color:#fff;}
+    .btn-outline{background:transparent; color:var(--ink); border-color:var(--ink);}
+    .btn-outline:hover{background:var(--ink); color:#fff;}
+    .btn-light{background:#fff; color:var(--ink);}
+    .section{padding:96px 0;}
+    .section-tight{padding:64px 0;}
+    .divider{height:1px; background:var(--line); border:none; margin:0;}
+    .grid{display:grid; gap:28px;}
+
+    /* header */
+    header.site{
+      position:sticky; top:0; z-index:50; background:rgba(255,255,255,0.94);
+      backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+    }
+    .nav-row{
+      display:flex; align-items:center; justify-content:space-between;
+      padding:16px 32px; max-width:1180px; margin:0 auto; gap:24px;
+    }
+    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;}
+    .brand img{width:34px; height:34px;}
+    .brand-text{display:flex; flex-direction:column; line-height:1.1;}
+    .brand-text .b1{font-weight:800; font-size:16px; letter-spacing:0.02em;}
+    .brand-text .b2{font-size:11px; color:var(--ink-soft); letter-spacing:0.06em;}
+    nav.links{display:flex; gap:30px; align-items:center;}
+    nav.links a{font-size:14.5px; font-weight:600; color:var(--ink-soft);}
+    nav.links a:hover{color:var(--ink);}
+    .nav-right{display:flex; align-items:center; gap:18px;}
+    .nav-phone{font-size:14px; font-weight:700; display:flex; align-items:center; gap:8px;}
+    .burger{display:none; background:none; border:none; padding:8px;}
+    .burger svg{width:24px; height:24px;}
+    .mobile-panel{
+      display:none; flex-direction:column; gap:2px; padding:8px 32px 20px;
+      border-top:1px solid var(--line);
+    }
+    .mobile-panel.open{display:flex;}
+    .mobile-panel a{padding:12px 0; font-weight:600; border-bottom:1px solid var(--line); font-size:15px;}
+
+    /* hero */
+    .hero{background:var(--paper-warm); overflow:hidden;}
+    .hero-inner{
+      max-width:1180px; margin:0 auto; padding:76px 32px 0;
+      display:grid; grid-template-columns:0.95fr 1.05fr; gap:56px; align-items:center;
+    }
+    .badge-urgent{
+      display:inline-flex; align-items:center; gap:8px; background:#fff;
+      border:1.5px solid; font-weight:800; font-size:12.5px;
+      letter-spacing:0.05em; text-transform:uppercase; padding:8px 14px; border-radius:var(--radius);
+      margin-bottom:22px;
+    }
+    .badge-urgent .dot{width:7px; height:7px; border-radius:50%; flex:none;}
+    .hero h1{font-size:clamp(2.3rem, 4.1vw, 3.4rem); line-height:1.08;}
+    .hero-sub{font-size:17px; color:var(--ink-soft); margin-top:22px; max-width:52ch;}
+    .price-block{
+      margin-top:32px; display:flex; align-items:baseline; gap:14px; flex-wrap:wrap;
+    }
+    .price-old{font-size:18px; color:#9b968a; text-decoration:line-through;}
+    .price-new{font-size:clamp(2.1rem,3.4vw,2.8rem); font-weight:900; color:var(--ink);}
+    .price-net{font-size:13.5px; color:var(--ink-soft); width:100%; margin-top:2px;}
+    .hero-ctas{display:flex; gap:16px; margin-top:30px; flex-wrap:wrap;}
+    .hero-trust{
+      margin-top:34px; padding-top:22px; border-top:1px solid var(--line);
+      display:flex; gap:26px; flex-wrap:wrap; font-size:13px; color:var(--ink-soft); font-weight:600;
+    }
+    .hero-trust span{display:flex; align-items:center; gap:8px;}
+    .hero-media{position:relative;}
+    .hero-media img{width:100%; height:auto; display:block; border-radius:var(--radius);}
+
+    /* full-bleed image bands */
+    .parallax-band{position:relative; height:380px; overflow:hidden;}
+    .band-img{
+      position:absolute; left:0; top:0; width:100%; height:100%; object-fit:cover;
+    }
+    @media (max-width: 900px){
+      .parallax-band{height:260px;}
+    }
+
+    /* section heads */
+    .section-head{max-width:640px; margin-bottom:52px;}
+    .section-head.center{margin-left:auto; margin-right:auto; text-align:center;}
+    .section-head h2{font-size:clamp(1.7rem,2.6vw,2.35rem); line-height:1.15;}
+    .section-head p{margin-top:16px; color:var(--ink-soft); font-size:16px;}
+
+    /* o modelu */
+    .about-grid{display:grid; grid-template-columns:0.95fr 1.05fr; gap:64px; align-items:center;}
+    .about-grid img{border-radius:var(--radius);}
+    .video-frame{display:block; border-radius:var(--radius); overflow:hidden; background:#000; line-height:0; cursor:pointer;}
+    .video-frame img{width:100%; height:auto; display:block; transition:opacity .15s ease;}
+    .video-frame:hover img{opacity:0.92;}
+
+    .model-gallery{display:flex; flex-direction:column; gap:12px;}
+    .model-gallery .gallery-main{width:100%; height:320px; object-fit:cover;}
+    .gallery-thumbs{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+    .gallery-thumbs img{width:100%; height:78px; object-fit:cover; cursor:pointer; opacity:0.7; border:2px solid transparent; transition:opacity .15s ease, border-color .15s ease; box-sizing:border-box;}
+    .gallery-thumbs img:hover{opacity:0.9;}
+    .gallery-thumbs img.thumb-active{opacity:1; border-color:var(--ink);}
+    .fn-chips{display:flex; gap:10px; flex-wrap:wrap; margin-top:26px;}
+    .fn-chip{
+      border:1.5px solid var(--line); padding:9px 16px; border-radius:30px; font-size:13.5px;
+      font-weight:700; color:var(--ink);
+    }
+
+    /* usp cards */
+    .usp-grid{grid-template-columns:repeat(3,1fr);}
+    .usp-card{
+      background:var(--paper-warm); padding:34px 28px; border-radius:var(--radius);
+      border:1px solid var(--line);
+    }
+    .usp-icon{
+      width:52px; height:52px; border-radius:50%; background:var(--terracotta-bg);
+      display:flex; align-items:center; justify-content:center; margin-bottom:20px;
+    }
+    .usp-icon svg{width:24px; height:24px; stroke:var(--terracotta-icon);}
+    .usp-card h3{font-size:18px; font-weight:700;}
+    .usp-card p{margin-top:10px; font-size:14.5px; color:var(--ink-soft);}
+
+    /* mobility band */
+    .mobility{
+      background:var(--charcoal); color:#fff; border-radius:var(--radius);
+      display:grid; grid-template-columns:1fr 1fr; gap:8px; align-items:center; overflow:hidden;
+    }
+    .mobility-copy{padding:56px 64px;}
+    .mobility h2{color:#fff; font-size:clamp(1.5rem,2.2vw,2rem);}
+    .mobility p{color:#d8d5cd; margin-top:16px; font-size:15.5px; max-width:44ch;}
+    .mobility img{width:100%; height:100%; object-fit:contain; max-height:340px; background:#ffffff; padding:22px; box-sizing:border-box;}
+
+    /* spec */
+    .spec-grid{grid-template-columns:repeat(3,1fr);}
+    .spec-item{display:flex; gap:16px; align-items:flex-start;}
+    .spec-icon{
+      width:46px; height:46px; border-radius:50%; background:var(--terracotta-bg);
+      display:flex; align-items:center; justify-content:center; flex:none;
+    }
+    .spec-icon svg{width:20px; height:20px; stroke:var(--terracotta-icon);}
+    .spec-item h3{font-size:15.5px; font-weight:700;}
+    .spec-item p{font-size:13.5px; color:var(--ink-soft); margin-top:4px;}
+    .spec-cta{
+      margin-top:44px; display:flex; align-items:center; justify-content:center; gap:16px; flex-wrap:wrap;
+      padding-top:36px; border-top:1px solid var(--line); text-align:center;
+    }
+    .spec-cta p{font-size:14px; color:var(--ink-soft);}
+
+    /* pricing */
+    .pricing-card{
+      background:var(--paper-warm); border:1px solid var(--line); border-radius:var(--radius);
+      padding:56px; display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center;
+    }
+    .pricing-list{list-style:none; margin:26px 0 0; padding:0; display:flex; flex-direction:column; gap:12px;}
+    .pricing-list li{display:flex; gap:10px; font-size:14.5px; color:var(--ink-soft); align-items:flex-start;}
+    .pricing-list svg{width:18px; height:18px; stroke:var(--wood); flex:none; margin-top:2px;}
+    .pricing-box{background:#fff; border:1px solid var(--line); padding:34px; border-radius:var(--radius); text-align:center;}
+    .pricing-box .price-old{display:block;}
+    .pricing-box .price-new{display:block; margin-top:6px;}
+    .pricing-box .btn{width:100%; margin-top:22px;}
+    .pricing-note{font-size:12.5px; color:var(--ink-soft); margin-top:14px;}
+
+    /* faq */
+    .faq-item{border-bottom:1px solid var(--line);}
+    .faq-q{
+      width:100%; background:none; border:none; text-align:left; padding:22px 0;
+      display:flex; justify-content:space-between; align-items:center; font-size:16px; font-weight:700; color:var(--ink);
+    }
+    .faq-q svg{width:18px; height:18px; stroke:var(--ink); transition:transform .2s ease; flex:none;}
+    .faq-a{max-height:0; overflow:hidden; transition:max-height .25s ease;}
+    .faq-a-inner{padding:0 0 22px; font-size:14.5px; color:var(--ink-soft); max-width:70ch;}
+
+
+    /* models cross-sell */
+    .models-grid{grid-template-columns:repeat(3,1fr);}
+    .model-card{
+      border:1px solid var(--line); border-radius:var(--radius); padding:26px; background:#fff;
+      display:flex; flex-direction:column; gap:12px;
+    }
+    .model-card .model-img{
+      width:calc(100% + 52px); margin:-26px -26px 4px; height:160px; object-fit:cover;
+    }
+    .model-card h3{font-size:16.5px; font-weight:800;}
+    .model-card .mprice{font-size:20px; font-weight:800;}
+    .model-card p{font-size:13.5px; color:var(--ink-soft); flex:1;}
+    .model-card button{
+      margin-top:6px; background:none; border:1.5px solid var(--ink); padding:10px 16px;
+      font-weight:700; font-size:13.5px; border-radius:var(--radius);
+    }
+    .model-card button:hover{background:var(--ink); color:#fff;}
+
+    /* contact */
+    .contact-wrap{
+      background:var(--paper); border:1px solid var(--line); border-radius:var(--radius);
+      display:grid; grid-template-columns:1.15fr 0.85fr; gap:0; overflow:hidden;
+    }
+    .contact-form{padding:56px; border-right:1px solid var(--line);}
+    .contact-form h2{color:var(--ink); font-size:clamp(1.5rem,2.2vw,2rem);}
+    .contact-form p.lead{color:var(--ink-soft); margin-top:12px; font-size:15px;}
+    .field{margin-top:22px; display:flex; flex-direction:column; gap:10px;}
+    .field label{font-size:12px; font-weight:700; letter-spacing:0.08em; color:var(--ink-soft); text-transform:uppercase;}
+    .field input, .field select, .field textarea{
+      background:#fff; border:1px solid var(--line); color:var(--ink); padding:20px;
+      font-family:inherit; font-size:15px; border-radius:4px; transition:border-color .15s ease;
+    }
+    .field select{padding:16px 20px;}
+    .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--ink); outline:none;}
+    .field textarea{resize:vertical; min-height:120px;}
+    .field input::placeholder, .field textarea::placeholder{color:#a8a49a;}
+    .consent{display:flex; gap:10px; align-items:flex-start; margin-top:20px; font-size:12.5px; color:var(--ink-soft);}
+    .consent input{margin-top:3px;}
+    .contact-form .btn{margin-top:24px; width:100%; border-radius:4px;}
+    .form-msg, .form-helper{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
+    .contact-info{background:var(--paper-warm); padding:56px 48px; display:flex; flex-direction:column; justify-content:center; gap:26px;}
+    .info-row{display:flex; gap:14px; align-items:flex-start;}
+    .info-row svg{width:20px; height:20px; stroke:var(--ink); flex:none; margin-top:2px;}
+    .info-row .t1{font-size:12px; text-transform:uppercase; letter-spacing:0.06em; color:var(--ink-soft); font-weight:700;}
+    .info-row .t2{font-size:15px; font-weight:600; margin-top:4px; color:var(--ink);}
+    .info-row a:hover{color:var(--ink-soft);}
+
+    /* footer */
+    footer{padding:64px 0 0; background:var(--ink-dark); color:#fff;}
+    .footer-top{
+      display:grid; grid-template-columns:1.3fr 1fr auto; gap:40px; align-items:start;
+      padding-bottom:44px; border-bottom:1px solid #3a3d42;
+    }
+    .fbrand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:16px;}
+    .fbrand img{width:24px; height:24px; filter:invert(1);}
+    .footer-tagline{margin-top:16px; font-size:14px; color:#c9c6bc; max-width:38ch; line-height:1.6;}
+    .footer-contact{display:flex; flex-direction:column; gap:6px; font-size:14px; color:#d8d5cd;}
+    .footer-contact .t1{font-weight:700; color:#fff; margin-bottom:4px;}
+    .footer-contact a:hover{color:var(--wood-light);}
+    .footer-bottom{
+      display:flex; justify-content:space-between; flex-wrap:wrap; gap:10px;
+      padding:22px 0; font-size:12.5px; color:#9a978d;
+    }
+
+    @media (max-width: 900px){
+      nav.links{display:none;}
+      .burger{display:block;}
+      .hero-inner{grid-template-columns:1fr; padding-top:44px;}
+      .hero-media{order:-1;}
+      .about-grid{grid-template-columns:1fr; gap:36px;}
+      .model-gallery .gallery-main{height:220px;}
+      .gallery-thumbs img{height:60px;}
+      .usp-grid, .spec-grid, .models-grid{grid-template-columns:1fr !important;}
+      .mobility{grid-template-columns:1fr;}
+      .mobility img{max-height:260px;}
+      .pricing-card{grid-template-columns:1fr; padding:32px;}
+      .contact-wrap{grid-template-columns:1fr;}
+      .contact-form, .contact-info{padding:36px 24px;}
+      .contact-form{border-right:none; border-bottom:1px solid var(--line);}
+      .section{padding:64px 0;}
+      .wrap{padding:0 20px;}
+      .nav-row{padding:14px 20px;}
+      .nav-phone{display:none;}
+      .footer-top{grid-template-columns:1fr; gap:28px;}
+    }
+  </style>
+</helmet>
+
+<!-- ============ HEADER ============ -->
+<header class="site">
+  <div class="nav-row">
+    <a class="brand" href="https://www.bokagardenroom.pl/" target="_blank" rel="noopener">
+      <img src="logo.png" alt="BOKA Garden Room">
+      <div class="brand-text">
+        <span class="b1">BOKA GARDEN ROOM</span>
+      </div>
+    </a>
+    <nav class="links">
+      <a href="#model">O modelu</a>
+      <a href="#specyfikacja">Specyfikacja</a>
+      <a href="#cennik">Cennik</a>
+      <a href="#inne-modele">Inne modele</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="nav-right">
+      <a class="nav-phone" href="tel:+48668476538">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +48 668 476 538
+      </a>
+      <a class="btn btn-primary" href="#kontakt" style="padding:11px 20px; font-size:13.5px;">Zapytaj o wycenę</a>
+      <button class="burger" onClick="{{toggleMobile}}" aria-label="Menu">
+        <sc-if value="{{mobileOpen}}" hint-placeholder-val="{{false}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+        </sc-if>
+        <sc-if value="{{notMobileOpen}}" hint-placeholder-val="{{true}}">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+        </sc-if>
+      </button>
+    </div>
+  </div>
+  <div class="mobile-panel {{mobilePanelClass}}">
+    <a href="#model" onClick="{{closeMobile}}">O modelu</a>
+    <a href="#specyfikacja" onClick="{{closeMobile}}">Specyfikacja</a>
+    <a href="#cennik" onClick="{{closeMobile}}">Cennik</a>
+    <a href="#inne-modele" onClick="{{closeMobile}}">Inne modele</a>
+    <a href="#faq" onClick="{{closeMobile}}">FAQ</a>
+    <a href="#kontakt" onClick="{{closeMobile}}">Kontakt</a>
+  </div>
+</header>
+
+<!-- ============ HERO ============ -->
+<section class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <div class="eyebrow">Model BOKA TWO</div>
+      <div class="badge-urgent" style="border-color:{{accent}}; color:{{accent}}"><span class="dot" style="background:{{accent}}"></span>Dostępny od ręki</div>
+      <h1>Prywatne biuro w&nbsp;ogrodzie, gotowe od&nbsp;zaraz.</h1>
+      <p class="hero-sub">Ocieplona konstrukcja, ciepłe potrójne przeszklenia i przytulne, drewniane wnętrze — miejsce do pracy, spotkań i&nbsp;odpoczynku tuż za drzwiami domu. Wystawiamy fakturę VAT.</p>
+      <div class="price-block">
+        <span class="price-old">69 000 zł</span>
+        <span class="price-new">49 900 zł brutto</span>
+        <span class="price-net">Cena netto 40 600 zł + 23% VAT</span>
+      </div>
+      <div class="hero-ctas">
+        <a class="btn btn-primary" href="#kontakt">Zapytaj o dostępność</a>
+        <a class="btn btn-outline" href="#specyfikacja">Zobacz specyfikację</a>
+      </div>
+      <div class="hero-trust">
+        <span>✓ Faktura VAT</span>
+        <span>✓ Realizacja pod klucz</span>
+        <span>✓ Do obejrzenia w Robakowie pod Poznaniem</span>
+      </div>
+    </div>
+    <div class="hero-media">
+      <img src="night-exterior.jpg" alt="BOKA TWO – biuro ogrodowe, widok zewnętrzny wieczorem">
+    </div>
+  </div>
+</section>
+
+<div class="parallax-band" style="margin-top:64px;">
+  <img class="band-img" src="garden-strip.jpg" alt="">
+</div>
+
+<!-- ============ O MODELU ============ -->
+<section class="section" id="model">
+  <div class="wrap">
+    <div class="about-grid">
+      <div class="model-gallery">
+        <sc-if value="{{gallery.isMain0}}" hint-placeholder-val="{{true}}">
+          <img class="gallery-main" src="interior.jpg" alt="Wnętrze BOKA TWO – sklejka brzozowa, strefa relaksu">
+        </sc-if>
+        <sc-if value="{{gallery.isMain1}}" hint-placeholder-val="{{false}}">
+          <img class="gallery-main" src="gallery-1.jpg" alt="BOKA TWO – widok z zewnątrz w ciągu dnia">
+        </sc-if>
+        <sc-if value="{{gallery.isMain2}}" hint-placeholder-val="{{false}}">
+          <img class="gallery-main" src="gallery-2.jpg" alt="BOKA TWO – stanowisko do pracy">
+        </sc-if>
+        <sc-if value="{{gallery.isMain3}}" hint-placeholder-val="{{false}}">
+          <img class="gallery-main" src="gallery-3.jpg" alt="BOKA TWO – strefa wypoczynku">
+        </sc-if>
+        <sc-if value="{{gallery.isMain4}}" hint-placeholder-val="{{false}}">
+          <img class="gallery-main" src="gallery-4.jpg" alt="BOKA TWO – wnętrze, widok ogólny">
+        </sc-if>
+        <div class="gallery-thumbs">
+          <img class="{{gallery.thumbClass0}}" onClick="{{gallery.select0}}" src="interior.jpg" alt="Wnętrze BOKA TWO – sklejka brzozowa, strefa relaksu">
+          <img class="{{gallery.thumbClass1}}" onClick="{{gallery.select1}}" src="gallery-1.jpg" alt="BOKA TWO – widok z zewnątrz w ciągu dnia">
+          <img class="{{gallery.thumbClass2}}" onClick="{{gallery.select2}}" src="gallery-2.jpg" alt="BOKA TWO – stanowisko do pracy">
+          <img class="{{gallery.thumbClass3}}" onClick="{{gallery.select3}}" src="gallery-3.jpg" alt="BOKA TWO – strefa wypoczynku">
+          <img class="{{gallery.thumbClass4}}" onClick="{{gallery.select4}}" src="gallery-4.jpg" alt="BOKA TWO – wnętrze, widok ogólny">
+        </div>
+      </div>
+      <div>
+        <div class="eyebrow">O modelu</div>
+        <h2>Spokojna przestrzeń, tuż obok domu</h2>
+        <p style="margin-top:20px; color:var(--ink-soft); font-size:16px;">
+          Nowoczesne biuro ogrodowe stworzone z myślą o komfortowej pracy przez cały rok. Ocieplona konstrukcja, duże, ciepłe potrójne przeszklenia i przytulne wykończenie wnętrza tworzą spokojną przestrzeń tuż obok domu. To gotowy moduł, który może pełnić funkcję biura, gabinetu, pokoju relaksu lub magazynu do pakowania paczek.
+        </p>
+        <p style="margin-top:14px; color:var(--ink-soft); font-size:16px;">
+          Wystawiamy fakturę VAT — idealne rozwiązanie również dla firm i osób prowadzących działalność gospodarczą.
+        </p>
+        <div class="fn-chips">
+          <span class="fn-chip">Biuro</span>
+          <span class="fn-chip">Gabinet</span>
+          <span class="fn-chip">Pokój relaksu</span>
+          <span class="fn-chip">Magazyn</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ USP ============ -->
+<section class="section">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Dlaczego BOKA TWO</div>
+      <h2>Zbudowane tak, żeby po prostu działało</h2>
+    </div>
+    <div class="grid usp-grid">
+      <sc-for list="{{uspCards}}" as="card" hint-placeholder-count="3">
+        <div class="usp-card">
+          <div class="usp-icon">
+            <sc-if value="{{card.isThermo}}" hint-placeholder-val="{{true}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+            </sc-if>
+            <sc-if value="{{card.isApp}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
+            </sc-if>
+            <sc-if value="{{card.isVat}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M9 15h6M9 11h2"/></svg>
+            </sc-if>
+          </div>
+          <h3>{{card.title}}</h3>
+          <p>{{card.text}}</p>
+        </div>
+      </sc-for>
+    </div>
+
+    <div class="mobility" style="margin-top:56px;">
+      <div class="mobility-copy">
+        <div class="eyebrow" style="color:var(--wood-light);">Mobilność</div>
+        <h2>Zmienisz adres? Zabierzesz go ze sobą.</h2>
+        <p>Modułowa konstrukcja BOKA TWO pozwala przewieźć gotowe biuro na nowe miejsce — dowozimy je i stawiamy dźwigiem, bez rozbiórki i budowy od podstaw.</p>
+      </div>
+      <img src="truck.jpg" alt="Transport biura BOKA TWO dźwigiem">
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ WIDEO ============ -->
+<section class="section" id="wideo" style="background:var(--paper-warm);">
+  <div class="wrap" style="max-width:900px;">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Zobacz na żywo</div>
+      <h2>Zajrzyj do wnętrza BOKA TWO</h2>
+    </div>
+    <div class="video-frame" onClick="{{openVideo}}" role="button" aria-label="Obejrzyj film – Biuro Ogrodowe BOKA TWO Robakowo (YouTube)">
+      <img src="video-thumb.jpg" alt="Wideo – wnętrze BOKA TWO, Robakowo">
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ SPECYFIKACJA ============ -->
+<section class="section" id="specyfikacja">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Specyfikacja</div>
+      <h2>Najważniejsze parametry modelu BOKA TWO</h2>
+    </div>
+    <div class="grid spec-grid">
+      <sc-for list="{{specItems}}" as="item" hint-placeholder-count="9">
+        <div class="spec-item">
+          <div class="spec-icon">
+            <sc-if value="{{item.isWymiary}}" hint-placeholder-val="{{true}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isDach}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 12 12 4l8 8"/><path d="M6 10v10h12V10"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isElewacja}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 4v16M9 4v16M14 4v16M19 4v16"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isWnetrze}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="4" width="18" height="16" rx="1"/><path d="M3 10h18M9 10v10"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isIzolacja}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 2 3 7v6c0 5 4 8 9 9 5-1 9-4 9-9V7z"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isOkna}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M12 4v16M4 12h16"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isOgrzewanie}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M14 14.76V3.5a2.5 2.5 0 0 0-5 0v11.26a4.5 4.5 0 1 0 5 0z"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isElektryka}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M13 2 3 14h7l-1 8 11-13h-7z"/></svg>
+            </sc-if>
+            <sc-if value="{{item.isOswietlenie}}" hint-placeholder-val="{{false}}">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="10" r="6"/><path d="M9.5 21h5M10 17h4"/></svg>
+            </sc-if>
+          </div>
+          <div>
+            <h3>{{item.title}}</h3>
+            <p>{{item.text}}</p>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+    <div class="spec-cta">
+      <button class="btn btn-outline" onClick="{{requestSpecPdf}}">Poproś o pełną specyfikację PDF</button>
+      <p>Wyślemy komplet danych technicznych na podany adres e-mail.</p>
+    </div>
+  </div>
+</section>
+
+<div class="parallax-band">
+  <img class="band-img" src="interior.jpg" alt="">
+</div>
+
+<!-- ============ CENNIK ============ -->
+<section class="section" id="cennik" style="background:var(--paper-warm);">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Cennik</div>
+      <h2>Ostatnia sztuka w promocyjnej cenie</h2>
+    </div>
+    <div class="pricing-card">
+      <div>
+        <h3 style="font-size:20px; font-weight:800;">W cenie otrzymujesz</h3>
+        <ul class="pricing-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Realizację pod klucz wraz z pełnym wykończeniem wnętrza</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Fakturę VAT — wygodne rozwiązanie także dla firm</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6 9 17l-5-5"/></svg>Ty dostawiasz tylko biurko i krzesło — możesz zacząć pracować od razu</li>
+        </ul>
+      </div>
+      <div class="pricing-box">
+        <span class="price-old">Cena regularna 69 000 zł</span>
+        <span class="price-new">49 900 zł brutto</span>
+        <div class="pricing-note">Cena netto 40 600 zł + 23% VAT</div>
+        <a class="btn btn-primary" href="#kontakt">Zarezerwuj termin oględzin</a>
+        <div class="pricing-note">Ostatni egzemplarz — do obejrzenia w Robakowie pod Poznaniem</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ FAQ ============ -->
+<section class="section" id="faq">
+  <div class="wrap" style="max-width:820px;">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Pytania i odpowiedzi</div>
+      <h2>Zanim zapytasz o wycenę</h2>
+    </div>
+    <div>
+      <sc-for list="{{faqItems}}" as="item" hint-placeholder-count="4">
+        <div class="faq-item">
+          <button class="faq-q" onClick="{{item.toggle}}">
+            {{item.q}}
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="{{item.iconStyle}}"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+          <div class="faq-a" style="{{item.panelStyle}}">
+            <div class="faq-a-inner">{{item.a}}</div>
+          </div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ INNE MODELE ============ -->
+<section class="section" id="inne-modele" style="background:var(--paper-warm);">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Inne modele</div>
+      <h2>Szukasz innego rozwiązania?</h2>
+      <p>BOKA TWO to nie jedyna opcja — pozostałe modele również można w pełni skonfigurować pod Twoją działkę.</p>
+    </div>
+    <div class="grid models-grid">
+      <sc-for list="{{otherModels}}" as="m" hint-placeholder-count="5">
+        <div class="model-card">
+          <sc-if value="{{m.isOne}}" hint-placeholder-val="{{true}}">
+            <img class="model-img" src="model-one.jpg" alt="{{m.alt}}">
+          </sc-if>
+          <sc-if value="{{m.isComfort}}" hint-placeholder-val="{{false}}">
+            <img class="model-img" src="model-comfort.jpg" alt="{{m.alt}}">
+          </sc-if>
+          <sc-if value="{{m.isSaunaBox}}" hint-placeholder-val="{{false}}">
+            <img class="model-img" src="model-sauna-box.jpg" alt="{{m.alt}}">
+          </sc-if>
+          <sc-if value="{{m.isSaunaModern}}" hint-placeholder-val="{{false}}">
+            <img class="model-img" src="model-sauna-modern.jpg" alt="{{m.alt}}">
+          </sc-if>
+          <sc-if value="{{m.isKonfigurator}}" hint-placeholder-val="{{false}}">
+            <img class="model-img" src="model-konfigurator.jpg" alt="{{m.alt}}">
+          </sc-if>
+          <h3>{{m.name}}</h3>
+          <span class="mprice">{{m.price}}</span>
+          <p>{{m.desc}}</p>
+          <button onClick="{{m.select}}">Zapytaj o ten model</button>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</section>
+
+<hr class="divider">
+
+<!-- ============ KONTAKT ============ -->
+<section class="section" id="kontakt">
+  <div class="wrap">
+    <div class="section-head center">
+      <div class="eyebrow" style="justify-content:center;">Kontakt</div>
+      <h2>Porozmawiajmy o Twoim Garden Room</h2>
+      <p>Odpowiadamy w dni robocze — umówimy prezentację na żywo w Robakowie lub online.</p>
+    </div>
+    <div class="contact-wrap">
+      <div class="contact-form">
+        <div class="field">
+          <label for="f-name">Imię i nazwisko</label>
+          <input id="f-name" type="text" placeholder="Jak się do Ciebie zwracać?" value="{{form.name}}" onChange="{{form.setName}}">
+        </div>
+        <div class="field">
+          <label for="f-contact">Telefon lub e-mail</label>
+          <input id="f-contact" type="text" placeholder="np. 600 000 000 lub jan@przyklad.pl" value="{{form.contact}}" onChange="{{form.setContact}}">
+        </div>
+        <div class="field">
+          <label for="f-model">Interesuje mnie</label>
+          <select id="f-model" value="{{form.model}}" onChange="{{form.setModel}}">
+            <sc-for list="{{modelOptions}}" as="opt" hint-placeholder-count="6">
+              <option value="{{opt}}">{{opt}}</option>
+            </sc-for>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f-message">Wiadomość (opcjonalnie)</label>
+          <textarea id="f-message" placeholder="Np. termin wizyty, pytania o montaż, wymiary działki…" value="{{form.message}}" onChange="{{form.setMessage}}"></textarea>
+        </div>
+        <label class="consent">
+          <input type="checkbox" checked="{{form.consent}}" onChange="{{form.setConsent}}">
+          Zgadzam się na kontakt zwrotny w sprawie mojego zapytania od BOKA Garden Room.
+        </label>
+        <button class="btn btn-primary" onClick="{{form.submit}}">Wyślij zapytanie</button>
+        <sc-if value="{{form.showMsg}}" hint-placeholder-val="{{false}}">
+          <div class="form-msg">{{form.msgText}}</div>
+        </sc-if>
+        <p class="form-helper">Odpowiadamy zwykle tego samego dnia roboczego.</p>
+      </div>
+      <div class="contact-info">
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <div><div class="t1">Telefon</div><a class="t2" href="tel:+48668476538">+48 668 476 538</a></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16v16H4z"/><path d="m22 6-10 7L2 6"/></svg>
+          <div><div class="t1">E-mail</div><a class="t2" href="mailto:info@bokagardenroom.pl">info@bokagardenroom.pl</a></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <div><div class="t1">Showroom</div><a class="t2" href="https://www.google.com/maps/search/?api=1&query=Aroniowa+9A+Robakowo" target="_blank" rel="noopener">Ul. Aroniowa 9A, 62-023 Robakowo</a></div>
+        </div>
+        <div class="info-row">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>
+          <div><div class="t1">Godziny pracy</div><div class="t2">Pon–Pt 9:00–17:00, Sob 9:00–13:00</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+  <div class="wrap footer-top">
+    <div>
+      <div class="fbrand"><img src="logo.png" alt="">BOKA Garden Room</div>
+      <p class="footer-tagline">Pomagamy oddzielić życie domowe od zawodowego — bez remontów, bez wydzielania pokoju w domu i bez dojazdów.</p>
+    </div>
+    <div class="footer-contact">
+      <div class="t1">BOKA Garden Room</div>
+      <div>Ul. Aroniowa 9A</div>
+      <div>62-023 Robakowo</div>
+      <div><a href="tel:+48668476538">+48 668 476 538</a></div>
+      <div><a href="mailto:info@bokagardenroom.pl">info@bokagardenroom.pl</a></div>
+    </div>
+    <a class="btn btn-primary" style="background:var(--ink); align-self:start;" href="#kontakt">Napisz do nas</a>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© 2026 BOKA Garden Room</span>
+    <a href="https://www.bokagardenroom.pl/" target="_blank" rel="noopener" style="color:inherit;">bokagardenroom.pl</a>
+  </div>
+</footer>
+
+</x-dc>
+<script data-dc-script data-props='{"accent":{"editor":"color","default":"#c0341a","options":["#c0341a","#22252a","#3a3d42"]}}'>
+class Component extends DCLogic {
+  toggleFaq(i){
+    const open = { ...(this.state.faqOpen || {}) };
+    open[i] = !open[i];
+    this.setState({ faqOpen: open });
+  }
+
+  buildMailto(subject, name, contact, model, message){
+    const bodyLines = [
+      'Imię i nazwisko: ' + (name || '-'),
+      'Kontakt: ' + (contact || '-'),
+      'Model: ' + (model || 'BOKA TWO'),
+      'Wiadomość: ' + (message || '-')
+    ];
+    const body = encodeURIComponent(bodyLines.join('\n'));
+    return 'mailto:info@bokagardenroom.pl?subject=' + encodeURIComponent(subject) + '&body=' + body;
+  }
+
+  renderVals(){
+    const state = this.state || {};
+    const mobileOpen = !!state.mobileOpen;
+    const faqOpen = state.faqOpen || {};
+    const galleryIndex = state.galleryIndex || 0;
+    const gallery = {
+      isMain0: galleryIndex === 0, isMain1: galleryIndex === 1, isMain2: galleryIndex === 2,
+      isMain3: galleryIndex === 3, isMain4: galleryIndex === 4,
+      thumbClass0: galleryIndex === 0 ? 'thumb-active' : '',
+      thumbClass1: galleryIndex === 1 ? 'thumb-active' : '',
+      thumbClass2: galleryIndex === 2 ? 'thumb-active' : '',
+      thumbClass3: galleryIndex === 3 ? 'thumb-active' : '',
+      thumbClass4: galleryIndex === 4 ? 'thumb-active' : '',
+      select0: () => this.setState({ galleryIndex: 0 }),
+      select1: () => this.setState({ galleryIndex: 1 }),
+      select2: () => this.setState({ galleryIndex: 2 }),
+      select3: () => this.setState({ galleryIndex: 3 }),
+      select4: () => this.setState({ galleryIndex: 4 })
+    };
+    const form = {
+      name: state.fName || '',
+      contact: state.fContact || '',
+      model: state.fModel || 'BOKA TWO',
+      message: state.fMessage || '',
+      consent: state.fConsent !== undefined ? state.fConsent : true,
+      showMsg: !!state.fShowMsg,
+      msgText: 'Otworzyliśmy Twój program pocztowy z gotową wiadomością — wystarczy ją wysłać. Możesz też zadzwonić: +48 668 476 538.',
+      setName: (e) => this.setState({ fName: e.target.value }),
+      setContact: (e) => this.setState({ fContact: e.target.value }),
+      setModel: (e) => this.setState({ fModel: e.target.value }),
+      setMessage: (e) => this.setState({ fMessage: e.target.value }),
+      setConsent: (e) => this.setState({ fConsent: e.target.checked }),
+      submit: () => {
+        const s = this.state || {};
+        const url = this.buildMailto('Zapytanie ze strony BOKA TWO', s.fName, s.fContact, s.fModel || 'BOKA TWO', s.fMessage);
+        window.location.href = url;
+        this.setState({ fShowMsg: true });
+      }
+    };
+
+    const uspCards = [
+      { title: 'Całoroczny komfort', text: 'Wełna mineralna i PIR w podłodze oraz potrójne, antracytowe szyby — pracujesz wygodnie zimą i latem.', isThermo: true, isApp: false, isVat: false },
+      { title: 'Sterowanie z aplikacji', text: 'Oświetlenie wewnętrzne i zewnętrzne oraz ogrzewanie (promiennik 1000 W) obsłużysz pilotem lub telefonem.', isThermo: false, isApp: true, isVat: false },
+      { title: 'Formalności bez stresu', text: 'Faktura VAT do każdej realizacji — wygodne rozwiązanie także dla firm i freelancerów.', isThermo: false, isApp: false, isVat: true }
+    ];
+
+    function specFlags(key){
+      const keys = ['wymiary','dach','elewacja','wnetrze','izolacja','okna','ogrzewanie','elektryka','oswietlenie'];
+      const flags = {};
+      keys.forEach(k => { flags['is' + k.charAt(0).toUpperCase() + k.slice(1)] = (k === key); });
+      return flags;
+    }
+
+    const specItems = [
+      { title: 'Wymiary zewnętrzne', text: '377 × 322 cm', ...specFlags('wymiary') },
+      { title: 'Dach', text: 'Nowoczesna i niezawodna membrana EPDM Firestone', ...specFlags('dach') },
+      { title: 'Elewacja', text: 'TermoSosna + blacha elewacyjna', ...specFlags('elewacja') },
+      { title: 'Wnętrze', text: 'Sklejka brzozowa + panele podłogowe', ...specFlags('wnetrze') },
+      { title: 'Całoroczna izolacja', text: 'Wełna mineralna oraz PIR w podłodze', ...specFlags('izolacja') },
+      { title: 'Ciepły pakiet okienny', text: '3 szyby, antracyt obustronnie', ...specFlags('okna') },
+      { title: 'Ogrzewanie', text: 'Promiennik 1000 W, sterowanie pilotem lub aplikacją', ...specFlags('ogrzewanie') },
+      { title: 'Elektryka', text: '5 obwodów, zabezpieczenie różnicowo-prądowe, 5 podwójnych gniazdek', ...specFlags('elektryka') },
+      { title: 'Oświetlenie', text: 'Wewnętrzne i zewnętrzne, sterowane z aplikacji', ...specFlags('oswietlenie') }
+    ];
+
+    const faqData = [
+      { q: 'Czy mogę zobaczyć biuro przed zakupem?', a: 'Tak — zapraszamy do naszej siedziby w Robakowie pod Poznaniem (ul. Aroniowa 9A). Jeśli brakuje Ci czasu, umówimy też prezentację online na kamerze.' },
+      { q: 'Jak wygląda dostawa i montaż?', a: 'Gotowy moduł dowozimy w całości i stawiamy na Twojej działce przy pomocy dźwigu — bez wielomiesięcznej budowy. Dzięki modułowej konstrukcji, w razie przeprowadzki możesz zabrać biuro ze sobą.' },
+      { q: 'Czy wystawiacie fakturę VAT?', a: 'Tak, wszystkie nasze realizacje obejmują fakturę VAT — to wygodne rozwiązanie również dla firm i osób prowadzących działalność gospodarczą.' },
+      { q: 'Czy mogę dopasować kolory i wykończenie?', a: 'Dla nowych zamówień — tak. Kolory, materiały oraz wybrane elementy wykończenia dopasowujemy indywidualnie do Twoich potrzeb. Prezentowana oferta dotyczy ostatniego, gotowego egzemplarza w wersji pokazanej na zdjęciach.' }
+    ];
+    const faqItems = faqData.map((item, i) => ({
+      q: item.q,
+      a: item.a,
+      toggle: () => this.toggleFaq(i),
+      iconStyle: faqOpen[i] ? 'transform:rotate(180deg)' : '',
+      panelStyle: faqOpen[i] ? 'max-height:300px' : 'max-height:0px'
+    }));
+
+    const modelsData = [
+      { name: 'BOKA ONE', price: '56 900 zł brutto', desc: 'Kompaktowe, przytulne i całoroczne biuro ogrodowe — na zamówienie, w pełni konfigurowalne.', alt: 'Biuro ogrodowe BOKA ONE', isOne: true, isComfort: false, isSaunaBox: false, isSaunaModern: false, isKonfigurator: false },
+      { name: 'BOKA COMFORT', price: '77 900 zł brutto', desc: 'Największy model z naszej oferty — więcej przestrzeni na biuro, gabinet lub pokój gościnny.', alt: 'Biuro ogrodowe BOKA COMFORT', isOne: false, isComfort: true, isSaunaBox: false, isSaunaModern: false, isKonfigurator: false },
+      { name: 'Sauna BOX', price: '45 900 zł brutto', desc: 'Kompaktowa sauna ogrodowa w nowoczesnej formie, z dużym przeszkleniem.', alt: 'Sauna ogrodowa Sauna BOX', isOne: false, isComfort: false, isSaunaBox: true, isSaunaModern: false, isKonfigurator: false },
+      { name: 'Sauna MODERN', price: '49 900 zł brutto', desc: 'Sauna z osobnym przedsionkiem — większy komfort korzystania w ogrodzie.', alt: 'Sauna ogrodowa Sauna MODERN', isOne: false, isComfort: false, isSaunaBox: false, isSaunaModern: true, isKonfigurator: false },
+      { name: 'Projekt na wymiar', price: 'Wycena indywidualna', desc: 'Sam zaprojektuj funkcję, styl i wymiary swojej przestrzeni w konfiguratorze.', alt: 'Konfigurator projektu Garden Room', isOne: false, isComfort: false, isSaunaBox: false, isSaunaModern: false, isKonfigurator: true }
+    ];
+    const otherModels = modelsData.map((m) => ({
+      ...m,
+      select: () => {
+        this.setState({ fModel: m.name });
+        const el = document.getElementById('kontakt');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      }
+    }));
+
+    return {
+      accent: this.props.accent ?? '#c0341a',
+      mobileOpen,
+      notMobileOpen: !mobileOpen,
+      mobilePanelClass: mobileOpen ? 'open' : '',
+      toggleMobile: () => this.setState({ mobileOpen: !mobileOpen }),
+      closeMobile: () => this.setState({ mobileOpen: false }),
+      uspCards,
+      specItems,
+      faqItems,
+      otherModels,
+      gallery,
+      openVideo: () => { window.open('https://www.youtube.com/watch?v=Tt9qtHee7Uc', '_blank'); },
+      modelOptions: ['BOKA TWO', 'BOKA ONE', 'BOKA COMFORT', 'Sauna BOX', 'Sauna MODERN', 'Projekt na wymiar'],
+      form,
+      requestSpecPdf: () => {
+        window.location.href = this.buildMailto('Prośba o specyfikację PDF – BOKA TWO', '', '', 'BOKA TWO', 'Proszę o przesłanie pełnej specyfikacji technicznej w PDF.');
+      }
+    };
+  }
+}
+</script>
+</body>
+</html>
