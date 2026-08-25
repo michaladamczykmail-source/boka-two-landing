@@ -80,10 +80,12 @@
       display:flex; align-items:center; justify-content:space-between;
       padding:16px 32px; max-width:1180px; margin:0 auto; gap:24px;
     }
-    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit;}
-    .brand img{width:34px; height:34px;}
-    .brand-text{display:flex; flex-direction:column; line-height:1.1;}
-    .brand-text .b1{font-weight:800; font-size:16px; letter-spacing:0.02em;}
+    .brand{display:flex; align-items:center; gap:12px; text-decoration:none; color:inherit; min-width:0; flex-shrink:1;}
+    .brand img{width:34px; height:34px; flex-shrink:0;}
+    .brand-text{display:flex; flex-direction:column; line-height:1.1; min-width:0;}
+    .brand-text .b1{font-weight:800; font-size:16px; letter-spacing:0.02em; white-space:nowrap;}
+    .nav-cta-short{display:none;}
+    .nav-cta{padding:11px 20px; font-size:13.5px;}
     .brand-text .b2{font-size:11px; color:var(--ink-soft); letter-spacing:0.06em;}
     nav.links{display:flex; gap:30px; align-items:center;}
     nav.links a{font-size:14.5px; font-weight:600; color:var(--ink-soft);}
@@ -186,7 +188,7 @@
 
     .model-gallery{display:flex; flex-direction:column; gap:12px;}
     .model-gallery .gallery-main{width:100%; height:320px; object-fit:cover;}
-    .gallery-thumbs{display:grid; grid-template-columns:repeat(4,1fr); gap:12px;}
+    .gallery-thumbs{display:grid; grid-template-columns:repeat(5,1fr); gap:12px;}
     .gallery-thumbs img{width:100%; height:78px; object-fit:cover; cursor:pointer; opacity:0.7; border:2px solid transparent; transition:opacity .15s ease, border-color .15s ease; box-sizing:border-box;}
     .gallery-thumbs img:hover{opacity:0.9;}
     .gallery-thumbs img.thumb-active{opacity:1; border-color:var(--ink);}
@@ -295,6 +297,7 @@
     }
     .field select{padding:16px 20px;}
     .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--ink); outline:none;}
+    .field input.invalid, .field select.invalid, .field textarea.invalid{border-color:#b3261e;}
     .field textarea{resize:vertical; min-height:120px;}
     .field input::placeholder, .field textarea::placeholder{color:#a8a49a;}
     .consent{display:flex; gap:10px; align-items:flex-start; margin-top:20px; font-size:12.5px; color:var(--ink-soft);}
@@ -317,7 +320,13 @@
     .cookie-actions .btn{padding:12px 22px; font-size:13.5px;}
     .cookie-actions .btn-outline{background:transparent; color:#fff; border-color:#fff;}
     .cookie-actions .btn-outline:hover{background:#fff; color:var(--ink);}
-    @media (max-width:640px){ .cookie-banner-inner{flex-direction:column; align-items:stretch;} .cookie-actions{justify-content:stretch;} .cookie-actions .btn{flex:1;} }
+    @media (max-width:640px){
+      .cookie-banner{padding:16px 20px;}
+      .cookie-banner-inner{flex-direction:column; align-items:stretch; gap:14px;}
+      .cookie-banner p{font-size:12.5px; line-height:1.45;}
+      .cookie-actions{justify-content:stretch; gap:10px;}
+      .cookie-actions .btn{flex:1; padding:11px 16px;}
+    }
     .form-msg, .form-helper{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
     .contact-info{background:var(--paper-warm); padding:56px 48px; display:flex; flex-direction:column; justify-content:center; gap:26px;}
     .info-row{display:flex; gap:14px; align-items:flex-start;}
@@ -360,8 +369,14 @@
       .contact-form{border-right:none; border-bottom:1px solid var(--line);}
       .section{padding:64px 0;}
       .wrap{padding:0 20px;}
-      .nav-row{padding:14px 20px;}
+      .nav-row{padding:14px 20px; gap:8px;}
       .nav-phone{display:none;}
+      .nav-right{gap:8px;}
+      .brand{gap:8px;}
+      .brand-text .b1{font-size:13px; letter-spacing:0;}
+      .nav-cta{padding:10px 14px;}
+      .nav-cta-full{display:none;}
+      .nav-cta-short{display:inline;}
       .footer-top{grid-template-columns:1fr; gap:28px;}
     }
   </style>
@@ -388,7 +403,7 @@
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
         +48 668 476 538
       </a>
-      <a class="btn btn-primary" href="#kontakt" style="padding:11px 20px; font-size:13.5px;">Zapytaj o wycenę</a>
+      <a class="btn btn-primary nav-cta" href="#kontakt"><span class="nav-cta-full">Zapytaj o wycenę</span><span class="nav-cta-short">Wycena</span></a>
       <button class="burger" onClick="{{toggleMobile}}" aria-label="Menu">
         <sc-if value="{{mobileOpen}}" hint-placeholder-val="{{false}}">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -423,7 +438,7 @@
         <span class="price-net">Cena netto 40 600 zł + 23% VAT</span>
       </div>
       <div class="hero-ctas">
-        <a class="btn btn-primary" href="#kontakt">Zapytaj o dostępność</a>
+        <a class="btn btn-primary" href="#kontakt">Umów odbiór od ręki</a>
         <a class="btn btn-outline" href="#specyfikacja">Zobacz specyfikację</a>
       </div>
       <div class="hero-trust">
@@ -637,7 +652,7 @@
     </div>
     <div class="spec-cta">
       <button class="btn btn-outline" onClick="{{requestSpecPdf}}">Poproś o pełną specyfikację PDF</button>
-      <p>Wyślemy komplet danych technicznych na podany adres e-mail.</p>
+      <p>Przeniesiemy Cię do formularza kontaktowego — wyślemy komplet danych technicznych na podany adres e-mail.</p>
     </div>
   </div>
 </section>
@@ -748,11 +763,11 @@
       <div class="contact-form">
         <div class="field">
           <label for="f-name">Imię i nazwisko</label>
-          <input id="f-name" type="text" placeholder="Jak się do Ciebie zwracać?" value="{{form.name}}" onChange="{{form.setName}}">
+          <input id="f-name" class="{{form.nameClass}}" type="text" placeholder="Jak się do Ciebie zwracać?" value="{{form.name}}" onChange="{{form.setName}}">
         </div>
         <div class="field">
           <label for="f-contact">Telefon lub e-mail</label>
-          <input id="f-contact" type="text" placeholder="np. 600 000 000 lub jan@przyklad.pl" value="{{form.contact}}" onChange="{{form.setContact}}">
+          <input id="f-contact" class="{{form.contactClass}}" type="text" placeholder="np. 600 000 000 lub jan@przyklad.pl" value="{{form.contact}}" onChange="{{form.setContact}}">
         </div>
         <div class="field">
           <label for="f-model">Interesuje mnie</label>
@@ -830,7 +845,7 @@
 <sc-if value="{{showCookieBanner}}" hint-placeholder-val="{{false}}">
   <div class="cookie-banner">
     <div class="cookie-banner-inner">
-      <p>Używamy plików cookie niezbędnych do działania strony oraz — po Twojej zgodzie — cookie z YouTube i Google Maps (ładują się dopiero gdy sam(a) klikniesz „Odtwórz wideo" lub „Pokaż mapę") oraz Google Analytics do statystyk odwiedzin. Zaakceptuj wszystkie poniżej, żeby je włączyć. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
+      <p>Używamy plików cookie niezbędnych do działania strony oraz — po Twojej zgodzie — cookie z YouTube i Google Maps do wyświetlenia filmu i mapy (przy „Akceptuj wszystkie" załadują się automatycznie; przy „Tylko niezbędne" załadujesz je pojedynczo, klikając „Odtwórz wideo" lub „Pokaż mapę") oraz Google Analytics do statystyk odwiedzin. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
       <div class="cookie-actions">
         <button class="btn btn-outline" type="button" onClick="{{cookieReject}}">Tylko niezbędne</button>
         <button class="btn btn-primary" type="button" onClick="{{cookieAccept}}">Akceptuj wszystkie</button>
@@ -867,26 +882,18 @@ class Component extends DCLogic {
     this.setState({ faqOpen: open });
   }
 
-  buildMailto(subject, name, contact, model, message){
-    const bodyLines = [
-      'Imię i nazwisko: ' + (name || '-'),
-      'Kontakt: ' + (contact || '-'),
-      'Model: ' + (model || 'BOKA TWO'),
-      'Wiadomość: ' + (message || '-')
-    ];
-    const body = encodeURIComponent(bodyLines.join('\n'));
-    return 'mailto:info@bokagardenroom.pl?subject=' + encodeURIComponent(subject) + '&body=' + body;
-  }
-
   async submitContactForm(){
     const s = this.state || {};
     if (s.fSending) return;
     const name = (s.fName || '').trim();
     const contact = (s.fContact || '').trim();
-    const consent = s.fConsent !== undefined ? s.fConsent : true;
+    const consent = s.fConsent !== undefined ? s.fConsent : false;
 
     if (!name || !contact) {
-      this.setState({ fShowMsg: true, fMsgKind: 'error', fMsgText: 'Podaj imię oraz telefon lub e-mail, żebyśmy mogli się odezwać.' });
+      this.setState({
+        fShowMsg: true, fMsgKind: 'error', fMsgText: 'Podaj imię oraz telefon lub e-mail, żebyśmy mogli się odezwać.',
+        fNameInvalid: !name, fContactInvalid: !contact
+      });
       return;
     }
     if (!consent) {
@@ -920,7 +927,7 @@ class Component extends DCLogic {
           fShowMsg: true,
           fMsgKind: 'success',
           fMsgText: 'Dziękujemy! Wiadomość dotarła do nas — odpowiadamy zwykle tego samego dnia roboczego.',
-          fName: '', fContact: '', fMessage: '', fWebsite: ''
+          fName: '', fContact: '', fMessage: '', fWebsite: '', fNameInvalid: false, fContactInvalid: false
         });
       } else {
         throw new Error((result && result.error) || 'send_failed');
@@ -971,13 +978,15 @@ class Component extends DCLogic {
       contact: state.fContact || '',
       model: state.fModel || 'BOKA TWO',
       message: state.fMessage || '',
-      consent: state.fConsent !== undefined ? state.fConsent : true,
+      consent: state.fConsent !== undefined ? state.fConsent : false,
       website: state.fWebsite || '',
       showMsg: !!state.fShowMsg,
       msgColor: state.fMsgKind === 'error' ? '#b3261e' : 'var(--ink-soft)',
       msgText: state.fMsgText || '',
-      setName: (e) => this.setState({ fName: e.target.value }),
-      setContact: (e) => this.setState({ fContact: e.target.value }),
+      nameClass: state.fNameInvalid ? 'invalid' : '',
+      contactClass: state.fContactInvalid ? 'invalid' : '',
+      setName: (e) => this.setState({ fName: e.target.value, fNameInvalid: false }),
+      setContact: (e) => this.setState({ fContact: e.target.value, fContactInvalid: false }),
       setModel: (e) => this.setState({ fModel: e.target.value }),
       setMessage: (e) => this.setState({ fMessage: e.target.value }),
       setConsent: (e) => this.setState({ fConsent: e.target.checked }),
@@ -1055,7 +1064,12 @@ class Component extends DCLogic {
       modelOptions: ['BOKA TWO', 'BOKA ONE', 'BOKA COMFORT', 'Sauna BOX', 'Sauna MODERN', 'Projekt na wymiar'],
       form,
       requestSpecPdf: () => {
-        window.location.href = this.buildMailto('Prośba o specyfikację PDF – BOKA TWO', '', '', 'BOKA TWO', 'Proszę o przesłanie pełnej specyfikacji technicznej w PDF.');
+        this.setState((s) => ({
+          fModel: 'BOKA TWO',
+          fMessage: (s.fMessage || '').trim() ? s.fMessage : 'Proszę o przesłanie pełnej specyfikacji technicznej BOKA TWO w PDF.'
+        }));
+        const el = document.getElementById('kontakt');
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
       },
       showCookieBanner,
       cookieAccept: () => cookieDecide('all'),
