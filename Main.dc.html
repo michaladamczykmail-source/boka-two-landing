@@ -7,10 +7,17 @@
 <body>
 <x-dc>
 <helmet>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
+    @font-face{
+      font-family:'Raleway'; font-style:normal; font-weight:300 900; font-display:swap;
+      src:url('fonts/raleway-latin.woff2') format('woff2');
+      unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+    }
+    @font-face{
+      font-family:'Raleway'; font-style:normal; font-weight:300 900; font-display:swap;
+      src:url('fonts/raleway-latin-ext.woff2') format('woff2');
+      unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+    }
     :root{
       --ink:#1c1c1a;
       --ink-dark:#1c1c1a;
@@ -146,6 +153,19 @@
     .about-grid img{border-radius:var(--radius);}
     .video-frame{position:relative; width:100%; padding-bottom:56.25%; height:0; border-radius:var(--radius); overflow:hidden; background:#000;}
     .video-frame iframe{position:absolute; top:0; left:0; width:100%; height:100%; border:0;}
+    .embed-placeholder{
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      border:0; padding:24px; cursor:pointer; background:#1c1c1a; font-family:inherit;
+    }
+    .embed-placeholder img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0.5;}
+    .embed-placeholder .ep-inner{position:relative; z-index:1; display:flex; flex-direction:column; align-items:center; gap:12px; color:#fff; text-align:center;}
+    .embed-placeholder .ep-icon{width:60px; height:60px; border-radius:50%; background:#fff; color:var(--ink); display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;}
+    .embed-placeholder .ep-label{font-size:14px; font-weight:700;}
+    .embed-placeholder .ep-note{font-size:12.5px; color:#d8d5cd; max-width:36ch;}
+    .map-frame .embed-placeholder{background:var(--paper-warm);}
+    .map-frame .embed-placeholder .ep-icon{background:var(--ink); color:#fff;}
+    .map-frame .embed-placeholder .ep-inner{color:var(--ink);}
+    .map-frame .embed-placeholder .ep-note{color:var(--ink-soft);}
 
     /* parallax sections */
     .parallax-section{position:relative; background-size:cover; background-position:center; background-attachment:fixed; padding:96px 0;}
@@ -281,6 +301,23 @@
     .consent input{margin-top:3px;}
     .hp-field{position:absolute; left:-9999px; top:-9999px; width:1px; height:1px; overflow:hidden;}
     .contact-form .btn{margin-top:24px; width:100%; border-radius:4px;}
+
+    /* cookie banner */
+    .cookie-banner{
+      position:fixed; left:0; right:0; bottom:0; z-index:200; background:var(--ink-dark); color:#fff;
+      padding:20px 24px; box-shadow:0 -4px 20px rgba(0,0,0,0.2);
+    }
+    .cookie-banner-inner{
+      max-width:1180px; margin:0 auto; display:flex; align-items:center; justify-content:space-between;
+      gap:24px; flex-wrap:wrap;
+    }
+    .cookie-banner p{font-size:13.5px; color:#d8d5cd; max-width:64ch; line-height:1.55;}
+    .cookie-banner a{color:#fff; text-decoration:underline;}
+    .cookie-actions{display:flex; gap:12px; flex:none; flex-wrap:wrap;}
+    .cookie-actions .btn{padding:12px 22px; font-size:13.5px;}
+    .cookie-actions .btn-outline{background:transparent; color:#fff; border-color:#fff;}
+    .cookie-actions .btn-outline:hover{background:#fff; color:var(--ink);}
+    @media (max-width:640px){ .cookie-banner-inner{flex-direction:column; align-items:stretch;} .cookie-actions{justify-content:stretch;} .cookie-actions .btn{flex:1;} }
     .form-msg, .form-helper{margin-top:14px; font-size:13.5px; color:var(--ink-soft);}
     .contact-info{background:var(--paper-warm); padding:56px 48px; display:flex; flex-direction:column; justify-content:center; gap:26px;}
     .info-row{display:flex; gap:14px; align-items:flex-start;}
@@ -501,7 +538,19 @@
       <h2>Zajrzyj do wnętrza BOKA TWO</h2>
     </div>
     <div class="video-frame">
-      <iframe src="https://www.youtube.com/embed/Tt9qtHee7Uc?autoplay=1&amp;loop=1&amp;controls=1&amp;mute=1&amp;rel=0&amp;playlist=Tt9qtHee7Uc" title="Wideo – wnętrze BOKA TWO, Robakowo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      <sc-if value="{{videoLoaded}}" hint-placeholder-val="{{false}}">
+        <iframe src="https://www.youtube.com/embed/Tt9qtHee7Uc?autoplay=1&amp;loop=1&amp;controls=1&amp;mute=1&amp;rel=0&amp;playlist=Tt9qtHee7Uc" title="Wideo – wnętrze BOKA TWO, Robakowo" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      </sc-if>
+      <sc-if value="{{videoNotLoaded}}" hint-placeholder-val="{{false}}">
+        <button class="embed-placeholder" type="button" onClick="{{loadVideo}}">
+          <img src="video-thumb.jpg" alt="">
+          <div class="ep-inner">
+            <div class="ep-icon">▶</div>
+            <div class="ep-label">Odtwórz wideo</div>
+            <div class="ep-note">Załaduje film z YouTube i włączy jego pliki cookie.</div>
+          </div>
+        </button>
+      </sc-if>
     </div>
   </div>
 </section>
@@ -521,7 +570,18 @@
         </div>
       </div>
       <div class="map-frame">
-        <iframe src="https://www.google.com/maps?q=Aroniowa+9A+Robakowo+62-023&amp;output=embed" title="Mapa – Robakowo, ul. Aroniowa 9A" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <sc-if value="{{mapLoaded}}" hint-placeholder-val="{{false}}">
+          <iframe src="https://www.google.com/maps?q=Aroniowa+9A+Robakowo+62-023&amp;output=embed" title="Mapa – Robakowo, ul. Aroniowa 9A" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </sc-if>
+        <sc-if value="{{mapNotLoaded}}" hint-placeholder-val="{{false}}">
+          <button class="embed-placeholder" type="button" onClick="{{loadMap}}">
+            <div class="ep-inner">
+              <div class="ep-icon">📍</div>
+              <div class="ep-label">Pokaż mapę</div>
+              <div class="ep-note">Załaduje mapę Google i włączy jej pliki cookie.</div>
+            </div>
+          </button>
+        </sc-if>
       </div>
     </div>
   </div>
@@ -760,9 +820,24 @@
   </div>
   <div class="wrap footer-bottom">
     <span>© 2026 BOKA Garden Room</span>
-    <a href="https://www.bokagardenroom.pl/" target="_blank" rel="noopener" style="color:inherit;">bokagardenroom.pl</a>
+    <div style="display:flex; gap:20px;">
+      <a href="polityka-prywatnosci.html" style="color:inherit;">Polityka prywatności</a>
+      <a href="https://www.bokagardenroom.pl/" target="_blank" rel="noopener" style="color:inherit;">bokagardenroom.pl</a>
+    </div>
   </div>
 </footer>
+
+<sc-if value="{{showCookieBanner}}" hint-placeholder-val="{{false}}">
+  <div class="cookie-banner">
+    <div class="cookie-banner-inner">
+      <p>Używamy plików cookie niezbędnych do działania strony oraz — po Twojej zgodzie — cookie z YouTube i Google Maps, które ładują się dopiero gdy sam(a) klikniesz „Odtwórz wideo" lub „Pokaż mapę", albo zaakceptujesz wszystkie poniżej. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
+      <div class="cookie-actions">
+        <button class="btn btn-outline" type="button" onClick="{{cookieReject}}">Tylko niezbędne</button>
+        <button class="btn btn-primary" type="button" onClick="{{cookieAccept}}">Akceptuj wszystkie</button>
+      </div>
+    </div>
+  </div>
+</sc-if>
 
 </x-dc>
 <script data-dc-script data-props='{"accent":{"editor":"color","default":"#c0341a","options":["#c0341a","#22252a","#3a3d42"]}}'>
@@ -849,6 +924,17 @@ class Component extends DCLogic {
     const mobileOpen = !!state.mobileOpen;
     const faqOpen = state.faqOpen || {};
     const galleryIndex = state.galleryIndex || 0;
+
+    let cookieChoice = null;
+    try { cookieChoice = localStorage.getItem('boka_cookie_consent'); } catch (e) {}
+    const cookiesAccepted = cookieChoice === 'all';
+    const showCookieBanner = !cookieChoice;
+    const cookieDecide = (value) => {
+      try { localStorage.setItem('boka_cookie_consent', value); } catch (e) {}
+      this.setState({ cookieBump: (state.cookieBump || 0) + 1 });
+    };
+    const videoLoaded = !!state.videoLoaded || cookiesAccepted;
+    const mapLoaded = !!state.mapLoaded || cookiesAccepted;
     const gallery = {
       isMain0: galleryIndex === 0, isMain1: galleryIndex === 1, isMain2: galleryIndex === 2,
       isMain3: galleryIndex === 3, isMain4: galleryIndex === 4,
@@ -953,7 +1039,16 @@ class Component extends DCLogic {
       form,
       requestSpecPdf: () => {
         window.location.href = this.buildMailto('Prośba o specyfikację PDF – BOKA TWO', '', '', 'BOKA TWO', 'Proszę o przesłanie pełnej specyfikacji technicznej w PDF.');
-      }
+      },
+      showCookieBanner,
+      cookieAccept: () => cookieDecide('all'),
+      cookieReject: () => cookieDecide('essential'),
+      videoLoaded,
+      videoNotLoaded: !videoLoaded,
+      loadVideo: () => this.setState({ videoLoaded: true }),
+      mapLoaded,
+      mapNotLoaded: !mapLoaded,
+      loadMap: () => this.setState({ mapLoaded: true })
     };
   }
 }

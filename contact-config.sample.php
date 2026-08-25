@@ -20,7 +20,7 @@ return [
     // Domeny, z których formularz może realnie wysyłać zapytania (ochrona przed
     // użyciem Twojego endpointu z obcej strony). Podaj bez "https://" i bez "/".
     'allowed_origins' => [
-        'two.bokagardenroom.pl',
+        'promocja.bokagardenroom.pl',
         'bokagardenroom.pl',
         'www.bokagardenroom.pl',
     ],

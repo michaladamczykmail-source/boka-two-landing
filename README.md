@@ -20,6 +20,6 @@ Aktualna, publicznie dostępna wersja jest opublikowana pod adresem:
 
 https://claude.ai/code/artifact/d82a6a52-907a-44ee-9b15-159a3280bd59
 
-Aby wdrożyć `boka-two-landing-page.html` pod własną domeną/subdomeną
-(np. `two.bokagardenroom.pl`), wystarczy wgrać ten plik na dowolny hosting
-statyczny obsługujący pojedyncze pliki HTML.
+Strona jest wdrożona pod adresem `promocja.bokagardenroom.pl` — wystarczy wgrać
+pliki na dowolny hosting statyczny z obsługą PHP (formularz kontaktowy wymaga
+PHP, patrz `contact.php`).
