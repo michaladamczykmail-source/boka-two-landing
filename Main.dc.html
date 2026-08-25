@@ -73,9 +73,11 @@
 
     /* header */
     header.site{
-      position:sticky; top:0; z-index:50; background:rgba(255,255,255,0.94);
+      position:fixed; top:0; left:0; right:0; z-index:50; background:rgba(255,255,255,0.94);
       backdrop-filter:blur(6px); border-bottom:1px solid var(--line);
+      transform:translateY(0); transition:transform .28s ease;
     }
+    header.site.site--hidden{ transform:translateY(-100%); }
     .nav-row{
       display:flex; align-items:center; justify-content:space-between;
       padding:16px 32px; max-width:1180px; margin:0 auto; gap:24px;
@@ -940,6 +942,42 @@ class Component extends DCLogic {
         fMsgText: 'Nie udało się wysłać formularza. Zadzwoń: +48 668 476 538 lub napisz na info@bokagardenroom.pl.'
       });
     }
+  }
+
+  componentDidMount(){
+    const header = document.querySelector('header.site');
+    this._syncHeaderSpacer = () => {
+      if (header) document.body.style.paddingTop = header.getBoundingClientRect().height + 'px';
+    };
+    this._syncHeaderSpacer();
+    window.addEventListener('resize', this._syncHeaderSpacer);
+
+    let lastY = window.scrollY;
+    let hidden = false;
+    let ticking = false;
+    this._onHeaderScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        const y = window.scrollY;
+        const header = document.querySelector('header.site');
+        if (header && !(this.state || {}).mobileOpen) {
+          const shouldHide = y > lastY && y > 80;
+          if (shouldHide !== hidden) {
+            hidden = shouldHide;
+            header.classList.toggle('site--hidden', hidden);
+          }
+        }
+        lastY = y;
+        ticking = false;
+      });
+    };
+    window.addEventListener('scroll', this._onHeaderScroll, { passive: true });
+  }
+
+  componentWillUnmount(){
+    if (this._onHeaderScroll) window.removeEventListener('scroll', this._onHeaderScroll);
+    if (this._syncHeaderSpacer) window.removeEventListener('resize', this._syncHeaderSpacer);
   }
 
   renderVals(){
