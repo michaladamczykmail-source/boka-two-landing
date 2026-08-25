@@ -830,7 +830,7 @@
 <sc-if value="{{showCookieBanner}}" hint-placeholder-val="{{false}}">
   <div class="cookie-banner">
     <div class="cookie-banner-inner">
-      <p>Używamy plików cookie niezbędnych do działania strony oraz — po Twojej zgodzie — cookie z YouTube i Google Maps, które ładują się dopiero gdy sam(a) klikniesz „Odtwórz wideo" lub „Pokaż mapę", albo zaakceptujesz wszystkie poniżej. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
+      <p>Używamy plików cookie niezbędnych do działania strony oraz — po Twojej zgodzie — cookie z YouTube i Google Maps (ładują się dopiero gdy sam(a) klikniesz „Odtwórz wideo" lub „Pokaż mapę") oraz Google Analytics do statystyk odwiedzin. Zaakceptuj wszystkie poniżej, żeby je włączyć. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
       <div class="cookie-actions">
         <button class="btn btn-outline" type="button" onClick="{{cookieReject}}">Tylko niezbędne</button>
         <button class="btn btn-primary" type="button" onClick="{{cookieAccept}}">Akceptuj wszystkie</button>
@@ -843,6 +843,22 @@
 <script data-dc-script data-props='{"accent":{"editor":"color","default":"#c0341a","options":["#c0341a","#22252a","#3a3d42"]}}'>
 const PAGE_LOADED_AT = Date.now();
 const CONTACT_ENDPOINT = './contact.php';
+const GA_MEASUREMENT_ID = 'G-RJKJVR61TG';
+
+let gaLoaded = false;
+function loadGoogleAnalytics(){
+  if (gaLoaded) return;
+  gaLoaded = true;
+  const s = document.createElement('script');
+  s.async = true;
+  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_MEASUREMENT_ID;
+  document.head.appendChild(s);
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ window.dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('js', new Date());
+  gtag('config', GA_MEASUREMENT_ID);
+}
 
 class Component extends DCLogic {
   toggleFaq(i){
@@ -929,6 +945,7 @@ class Component extends DCLogic {
     try { cookieChoice = localStorage.getItem('boka_cookie_consent'); } catch (e) {}
     const cookiesAccepted = cookieChoice === 'all';
     const showCookieBanner = !cookieChoice;
+    if (cookiesAccepted) loadGoogleAnalytics();
     const cookieDecide = (value) => {
       try { localStorage.setItem('boka_cookie_consent', value); } catch (e) {}
       this.setState({ cookieBump: (state.cookieBump || 0) + 1 });
